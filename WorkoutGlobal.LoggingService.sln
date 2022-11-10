@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutGlobal.LoggingService.API", "WorkoutGlobal.LoggingService.API\WorkoutGlobal.LoggingService.API.csproj", "{25DEA0A8-BF50-414F-93DF-12E8D81CE934}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutGlobal.LoggingService.Api", "WorkoutGlobal.LoggingService.API\WorkoutGlobal.LoggingService.Api.csproj", "{25DEA0A8-BF50-414F-93DF-12E8D81CE934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
