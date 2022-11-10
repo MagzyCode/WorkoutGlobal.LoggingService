@@ -1,9 +1,11 @@
-﻿namespace WorkoutGlobal.LoggingService.API.Models
+﻿using WorkoutGlobal.LoggingService.Api.Contracts;
+
+namespace WorkoutGlobal.LoggingService.API.Models
 {
     /// <summary>
     /// Represents basic model of log.
     /// </summary>
-    public class Log
+    public class Log : IModel<Guid>
     {
         /// <summary>
         /// Unique identifier of log.

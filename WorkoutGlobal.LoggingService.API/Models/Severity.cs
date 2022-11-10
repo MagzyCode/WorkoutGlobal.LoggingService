@@ -1,9 +1,11 @@
-﻿namespace WorkoutGlobal.LoggingService.API.Models
+﻿using WorkoutGlobal.LoggingService.Api.Contracts;
+
+namespace WorkoutGlobal.LoggingService.API.Models
 {
     /// <summary>
     /// Represents model of severity level of log.
     /// </summary>
-    public class Severity
+    public class Severity : IModel<int>
     {
         /// <summary>
         /// Unique identifier of severity level.
