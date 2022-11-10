@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using WorkoutGlobal.LoggingService.Api.Contracts;
 using WorkoutGlobal.LoggingService.Api.Dto;
 using WorkoutGlobal.LoggingService.Api.Repositories;
-using WorkoutGlobal.LoggingService.Api.Repositories.ModelRepositories;
 using WorkoutGlobal.LoggingService.Api.Validators;
 using WorkoutGlobal.LoggingService.API.DbContext;
 

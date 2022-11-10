@@ -3,7 +3,7 @@ using WorkoutGlobal.LoggingService.Api.Contracts;
 using WorkoutGlobal.LoggingService.API.DbContext;
 using WorkoutGlobal.LoggingService.API.Models;
 
-namespace WorkoutGlobal.LoggingService.Api.Repositories.ModelRepositories
+namespace WorkoutGlobal.LoggingService.Api.Repositories
 {
     /// <summary>
     /// Represents repository for log model.

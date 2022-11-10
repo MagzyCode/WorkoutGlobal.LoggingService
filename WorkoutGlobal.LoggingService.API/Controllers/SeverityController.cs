@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutGlobal.LoggingService.Api.Contracts;
 using WorkoutGlobal.LoggingService.Api.Dto;
 using WorkoutGlobal.LoggingService.API.Models;
-using WorkoutGlobal.LoggingService.Api.Repositories.ModelRepositories;
 using FluentValidation;
 
 namespace WorkoutGlobal.LoggingService.Api.Controllers

@@ -15,10 +15,10 @@ namespace WorkoutGlobal.LoggingService.Api.Validators
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(log => log.Message)
+            RuleFor(severity => severity.SeverityName)
                 .NotEmpty();
 
-            RuleFor(log => log.Severity)
+            RuleFor(severity => severity.SeveriryDescription)
                 .NotEmpty();
         }
     }
