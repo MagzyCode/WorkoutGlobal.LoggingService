@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="Dto\SeverityDto\" />
   </ItemGroup>
 
 </Project>

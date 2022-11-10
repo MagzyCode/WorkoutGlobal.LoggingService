@@ -83,6 +83,36 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         }
 
         /// <summary>
+        /// Get sevetiry id by name.
+        /// </summary>
+        /// <param name="name">Severity name.</param>
+        /// <returns>Returns severity id by given name.</returns>
+        public async Task<int> GetSeverityIdByName(string name)
+        {
+            var id = await Context.Severities
+                .Where(severity => severity.SeverityName == name)
+                .Select(severity => severity.Id)
+                .FirstOrDefaultAsync();
+
+            return id;
+        }
+
+        /// <summary>
+        /// Get severity name by id.
+        /// </summary>
+        /// <param name="id">Severity id.</param>
+        /// <returns>Returns severity name by given id.</returns>
+        public async Task<string> GetSeverityNameById(int id)
+        {
+            var name = await Context.Severities
+                .Where(severity => severity.Id == id)
+                .Select(severity => severity.SeverityName)
+                .FirstOrDefaultAsync();
+
+            return name;
+        }
+
+        /// <summary>
         /// Update severity.
         /// </summary>
         /// <param name="updationSeverity">Updation severity.</param>

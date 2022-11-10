@@ -15,7 +15,7 @@ namespace WorkoutGlobal.LoggingService.API.Models
         /// <summary>
         /// Time when log was created.
         /// </summary>
-        public DateTime LogTime { get; set; } = DateTime.UtcNow;
+        public DateTime LogTime { get; set; }
 
         /// <summary>
         /// Log info.

@@ -48,5 +48,19 @@ namespace WorkoutGlobal.LoggingService.Api.Contracts
         /// <param name="id">Severity level id.</param>
         /// <returns>Returns collection of severity level logs.</returns>
         public Task<IEnumerable<Log>> GetAllSeverityLogs(int id);
+
+        /// <summary>
+        /// Get severity name by id.
+        /// </summary>
+        /// <param name="id">Severity id.</param>
+        /// <returns>Returns severity name by given id.</returns>
+        public Task<string> GetSeverityNameById(int id);
+
+        /// <summary>
+        /// Get sevetiry id by name.
+        /// </summary>
+        /// <param name="name">Severity name.</param>
+        /// <returns>Returns severity id by given name.</returns>
+        public Task<int> GetSeverityIdByName(string name);
     }
 }

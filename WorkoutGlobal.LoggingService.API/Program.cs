@@ -1,5 +1,4 @@
 using FluentValidation.AspNetCore;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutGlobal.LoggingService.API.Extensions;
 
@@ -11,7 +10,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.ConfigureRepositories();
+
 
 var app = builder.Build();
 
