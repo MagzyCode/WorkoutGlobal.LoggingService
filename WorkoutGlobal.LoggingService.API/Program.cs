@@ -12,11 +12,11 @@ builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 
 builder.Services.AddControllers();
+builder.Services.ConfigureValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositories();
 
 

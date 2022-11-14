@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using System.Data;
 using WorkoutGlobal.LoggingService.Api.Contracts;
-using WorkoutGlobal.LoggingService.API.DbContext;
 using WorkoutGlobal.LoggingService.API.Models;
 
 namespace WorkoutGlobal.LoggingService.Api.Repositories
@@ -8,17 +8,15 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
     /// <summary>
     /// Represents repository for severity model.
     /// </summary>
-    public class SeverityRepository : BaseRepository<Severity, int>, ISeverityRepository
+    public class SeverityRepository : BaseRepository, ISeverityRepository<int, Severity>
     {
         /// <summary>
         /// Ctor for severity repository.
         /// </summary>
         /// <param name="configuration">Project configuration.</param>
-        /// <param name="context">Database context.</param>
-        public SeverityRepository(
-            IConfiguration configuration, 
-            LoggerContext context) 
-            : base(configuration, context)
+        /// <param name="tableName">Table name.</param>
+        public SeverityRepository(IConfiguration configuration, string tableName = "Severities") 
+            : base(configuration, tableName)
         { }
 
         /// <summary>
@@ -28,9 +26,17 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Return generated id for new severity.</returns>
         public async Task<int> CreateSeverityAsync(Severity creationSeverity)
         {
-            var createdId = await CreateAsync(creationSeverity);
+            var query = @$"INSERT INTO {TableName} (SeverityName, SeveriryDescription) 
+                           VALUES (@SeverityName, @SeveriryDescription)
+                           RETURNING Id";
 
-            await SaveChangesAsync();
+            var parameters = new DynamicParameters();
+            parameters.Add("SeverityName", creationSeverity.SeverityName, DbType.String);
+            parameters.Add("SeveriryDescription", creationSeverity.SeveriryDescription, DbType.String);
+
+            using var connection = OpenConnection();
+
+            var createdId = await connection.ExecuteScalarAsync<int>(query, parameters);
 
             return createdId;
         }
@@ -42,8 +48,17 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns></returns>
         public async Task DeleteSeverityAsync(int id)
         {
-            await DeleteAsync(id);
-            await SaveChangesAsync();
+            var query = @$"DELETE FROM {TableName} WHERE Id = @Id";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+
+            using var connection = OpenConnection();
+
+            var affectedRows = await connection.ExecuteAsync(query, parameters);
+
+            if (affectedRows != 1)
+                throw new InvalidOperationException("Delete operation don't execute.");
         }
 
         /// <summary>
@@ -52,9 +67,12 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns collection of all severities.</returns>
         public async Task<IEnumerable<Severity>> GetAllSeveritiesAsync()
         {
-            var models = await GetAll().ToListAsync();
+            var query = @$"SELECT * FROM {TableName}";
 
-            return models;
+            using var connection = OpenConnection();
+            var severities = await connection.QueryAsync<Severity>(query);
+
+            return severities.ToList();
         }
 
         /// <summary>
@@ -64,8 +82,14 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns collection of severity level logs.</returns>
         public async Task<IEnumerable<Log>> GetAllSeverityLogs(int id)
         {
-            var logs = await Context.Logs.Where(log => log.SeverityId == id).ToListAsync();
-            
+            var query = "SELECT * FROM Logs WHERE SeverityId = @SeverityId";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+
+            using var connection = OpenConnection();
+            var logs = await connection.QueryAsync<Log>(query, parameters);
+
             return logs;
         }
 
@@ -73,28 +97,39 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// Get severity by id.
         /// </summary>
         /// <param name="id">Severity id.</param>
-        /// <param name="trackChanges">Tracking model state.</param>
         /// <returns>Returns severity by given id.</returns>
-        public async Task<Severity> GetSeverityAsync(int id, bool trackChanges = true)
+        public async Task<Severity> GetSeverityAsync(int id)
         {
-            var model = await GetAsync(id, trackChanges);
+            var query = @$"SELECT * FROM {TableName} WHERE Id = @Id";
 
-            return model;
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Guid);
+
+            using var connection = OpenConnection();
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+
+            return severity;
         }
 
         /// <summary>
         /// Get sevetiry id by name.
         /// </summary>
         /// <param name="name">Severity name.</param>
-        /// <returns>Returns severity id by given name.</returns>
+        /// <returns>Returns severity id by given name. If severity with given name doesn't exists return -1.</returns>
         public async Task<int> GetSeverityIdByName(string name)
         {
-            var id = await Context.Severities
-                .Where(severity => severity.SeverityName == name)
-                .Select(severity => severity.Id)
-                .FirstOrDefaultAsync();
+            var query = @$"SELECT Id FROM {TableName}
+                           WHERE SeverityName = @SeverityName";
 
-            return id;
+            var parameters = new DynamicParameters();
+            parameters.Add("SeverityName", name, DbType.String);
+
+            using var connection = OpenConnection();
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+
+            return severity is null 
+                ? -1
+                : severity.Id;
         }
 
         /// <summary>
@@ -104,12 +139,16 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns severity name by given id.</returns>
         public async Task<string> GetSeverityNameById(int id)
         {
-            var name = await Context.Severities
-                .Where(severity => severity.Id == id)
-                .Select(severity => severity.SeverityName)
-                .FirstOrDefaultAsync();
+            var query = @$"SELECT SeverityName FROM {TableName}
+                           WHERE Id = @Id";
 
-            return name;
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+
+            using var connection = OpenConnection();
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+
+            return severity?.SeverityName;
         }
 
         /// <summary>
@@ -119,8 +158,21 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns></returns>
         public async Task UpdateSeverityAsync(Severity updationSeverity)
         {
-            Update(updationSeverity);
-            await SaveChangesAsync();
+            var query = @$"UPDATE {TableName} 
+                           SET Id = @Id, SeverityName = @SeverityName, SeveriryDescription = @SeveriryDescription
+                           WHERE Id = @Id";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", updationSeverity.Id, DbType.Int32);
+            parameters.Add("SeverityName", updationSeverity.SeverityName, DbType.String);
+            parameters.Add("SeveriryDescription", updationSeverity.SeveriryDescription, DbType.String);
+
+            using var connection = OpenConnection();
+
+            var affectedRows = await connection.ExecuteAsync(query, parameters);
+
+            if (affectedRows != 1)
+                throw new InvalidOperationException("Update operation don't execute.");
         }
     }
 }

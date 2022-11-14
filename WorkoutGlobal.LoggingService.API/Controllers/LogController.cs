@@ -15,8 +15,8 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
     [Produces("application/json")]
     public class LogController : ControllerBase
     {
-        private ILogRepository _logRepository;
-        private ISeverityRepository _severityRepository;
+        private ILogRepository<Guid, Log> _logRepository;
+        private ISeverityRepository<int, API.Models.Severity> _severityRepository;
         private IMapper _mapper;
         private IValidator<CreationLogDto> _creationLogValidator;
         private IValidator<UpdationLogDto> _updationLogValidator;
@@ -27,23 +27,26 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         /// <param name="logRepository">Log repository.</param>
         /// <param name="severityRepository">Severity repository.</param>
         /// <param name="creationValidator">Creation log model validator.</param>
+        /// <param name="updationValidator">Updation log model validator.</param>
         /// <param name="mapper">AutoMapper instanse.</param>
         public LogController(
-            ILogRepository logRepository,
-            ISeverityRepository severityRepository,
+            ILogRepository<Guid, Log> logRepository,
+            ISeverityRepository<int, API.Models.Severity> severityRepository,
             IValidator<CreationLogDto> creationValidator,
+            IValidator<UpdationLogDto> updationValidator,
             IMapper mapper)
         {
             LogRepository = logRepository;
             SeverityRepository = severityRepository;
             CreationValidator = creationValidator;
+            UpdationValidator = updationValidator;
             Mapper = mapper;
         }
 
         /// <summary>
         /// Log repository.
         /// </summary>
-        public ILogRepository LogRepository
+        public ILogRepository<Guid, Log> LogRepository
         {
             get => _logRepository;
             private set => _logRepository = value;
@@ -52,7 +55,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         /// <summary>
         /// Repository manager.
         /// </summary>
-        public ISeverityRepository SeverityRepository
+        public ISeverityRepository<int, API.Models.Severity> SeverityRepository
         {
             get => _severityRepository;
             private set => _severityRepository = value;
@@ -251,7 +254,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
                     Details = "Searchable log cannot be found because id is empty."
                 });
 
-            var log = await LogRepository.GetLogAsync(id, false);
+            var log = await LogRepository.GetLogAsync(id);
 
             if (log is null)
                 return NotFound(new ErrorDetails()

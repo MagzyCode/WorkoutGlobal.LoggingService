@@ -5,48 +5,50 @@ namespace WorkoutGlobal.LoggingService.Api.Contracts
     /// <summary>
     /// Base interface for log repository.
     /// </summary>
-    public interface ILogRepository
+    /// <typeparam name="TId">Model identifier.</typeparam>
+    /// <typeparam name="TModel">Repository operation model.</typeparam>
+    public interface ILogRepository<TId, TModel>
+        where TModel: IModel<TId>
     {
         /// <summary>
         /// Get log by id.
         /// </summary>
         /// <param name="id">Log id.</param>
-        /// <param name="trackChanges">Tracking model state.</param>
         /// <returns>Returns log by given id.</returns>
-        public Task<Log> GetLogAsync(Guid id, bool trackChanges = true);
+        public Task<TModel> GetLogAsync(TId id);
 
         /// <summary>
         /// Get all logs.
         /// </summary>
         /// <returns>Returns collection of all logs.</returns>
-        public Task<IEnumerable<Log>> GetAllLogsAsync();
+        public Task<IEnumerable<TModel>> GetAllLogsAsync();
 
         /// <summary>
         /// Create log.
         /// </summary>
         /// <param name="creationLog">Creation log.</param>
         /// <returns>Return generated id for new model.</returns>
-        public Task<Guid> CreateLogAsync(Log creationLog);
+        public Task<TId> CreateLogAsync(TModel creationLog);
 
         /// <summary>
         /// Delete log by id.
         /// </summary>
         /// <param name="id">Log id.</param>
         /// <returns></returns>
-        public Task DeleteLogAsync(Guid id);
+        public Task DeleteLogAsync(TId id);
 
         /// <summary>
         /// Update log.
         /// </summary>
         /// <param name="updationLog">Updation log.</param>
         /// <returns></returns>
-        public Task UpdateLogAsync(Log updationLog);
+        public Task UpdateLogAsync(TModel updationLog);
 
         /// <summary>
         /// Get log severity level.
         /// </summary>
         /// <param name="id">Log id.</param>
         /// <returns>Severity model of giving by id log.</returns>
-        public Task<Severity> GetLogSevetiry(Guid id);
+        public Task<Severity> GetLogSevetiry(TId id);
     }
 }

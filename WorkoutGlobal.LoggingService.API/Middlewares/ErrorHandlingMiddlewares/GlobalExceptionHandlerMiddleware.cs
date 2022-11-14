@@ -35,7 +35,6 @@ namespace WorkoutGlobal.LoggingService.API.Middlewares
             }
             catch (Exception exception)
             {
-                // TODO: Change all calls of StackTrace class for string description.
                 var error = new ErrorDetails();
                 switch (exception)
                 {

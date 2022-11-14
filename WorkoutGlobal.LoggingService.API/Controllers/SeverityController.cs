@@ -15,7 +15,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
     [Produces("application/json")]
     public class SeverityController : ControllerBase
     {
-        private ISeverityRepository _severityRepository;
+        private ISeverityRepository<int, API.Models.Severity> _severityRepository;
         private IMapper _mapper;
         private IValidator<CreationSeverityDto> _creationValidator;
         private IValidator<UpdationSeverityDto> _updationValidator;
@@ -28,7 +28,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         /// <param name="creationValidator">Creation validator instanse.</param>
         /// <param name="updationValidator">Updation validator instanse.</param>
         public SeverityController(
-            ISeverityRepository severityRepository,
+            ISeverityRepository<int, API.Models.Severity> severityRepository,
             IMapper mapper,
             IValidator<CreationSeverityDto> creationValidator,
             IValidator<UpdationSeverityDto> updationValidator)
@@ -42,7 +42,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         /// <summary>
         /// Severity repository.
         /// </summary>
-        public ISeverityRepository SeverityRepository
+        public ISeverityRepository<int, API.Models.Severity> SeverityRepository
         {
             get => _severityRepository;
             private set => _severityRepository = value;
@@ -237,7 +237,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
                     Details = "Searchable severity cannot be found because id isn't valid."
                 });
 
-            var severity = await SeverityRepository.GetSeverityAsync(id, false);
+            var severity = await SeverityRepository.GetSeverityAsync(id);
 
             if (severity is null)
                 return NotFound(new ErrorDetails()
