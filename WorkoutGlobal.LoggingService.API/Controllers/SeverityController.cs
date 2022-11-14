@@ -289,7 +289,7 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
                     Details = "Cannot find severity with given id."
                 });
 
-            var logs = await SeverityRepository.GetAllSeverityLogs(id);
+            var logs = await SeverityRepository.GetAllSeverityLogsAsync(id);
 
             var logsDto = Mapper.Map<IEnumerable<LogDto>>(logs);
 

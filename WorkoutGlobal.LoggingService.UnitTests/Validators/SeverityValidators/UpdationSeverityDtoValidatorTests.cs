@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using WorkoutGlobal.LoggingService.Api.Dto;
 using WorkoutGlobal.LoggingService.Api.Validators;
 
-namespace WorkoutGlobal.LoggingService.UnitTests.Validators.SeverityValidators
+namespace WorkoutGlobal.LoggingService.UnitTests.Validators
 {
     public class UpdationSeverityDtoValidatorTests
     {

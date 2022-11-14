@@ -1,15 +1,10 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WorkoutGlobal.LoggingService.Api.Dto;
 using WorkoutGlobal.LoggingService.Api.Validators;
 
-namespace WorkoutGlobal.LoggingService.UnitTests.Validators.SeverityValidators
+namespace WorkoutGlobal.LoggingService.UnitTests.Validators
 {
     public class CreationSeverityDtoValidatorTests
     {

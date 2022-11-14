@@ -26,6 +26,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Return generated id for new severity.</returns>
         public async Task<int> CreateSeverityAsync(Severity creationSeverity)
         {
+            if (creationSeverity is null)
+                throw new ArgumentNullException(nameof(creationSeverity), "Creation severity model cannot be null.");
+
             var query = @$"INSERT INTO {TableName} (SeverityName, SeveriryDescription) 
                            VALUES (@SeverityName, @SeveriryDescription)
                            RETURNING Id";
@@ -48,6 +51,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns></returns>
         public async Task DeleteSeverityAsync(int id)
         {
+            if (id <= 0)
+                throw new ArgumentException("Deletion severity id cannot be less then 0.", nameof(id));
+
             var query = @$"DELETE FROM {TableName} WHERE Id = @Id";
 
             var parameters = new DynamicParameters();
@@ -80,8 +86,11 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// </summary>
         /// <param name="id">Severity level id.</param>
         /// <returns>Returns collection of severity level logs.</returns>
-        public async Task<IEnumerable<Log>> GetAllSeverityLogs(int id)
+        public async Task<IEnumerable<Log>> GetAllSeverityLogsAsync(int id)
         {
+            if (id <= 0)
+                throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
+
             var query = "SELECT * FROM Logs WHERE SeverityId = @SeverityId";
 
             var parameters = new DynamicParameters();
@@ -100,6 +109,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns severity by given id.</returns>
         public async Task<Severity> GetSeverityAsync(int id)
         {
+            if (id <= 0)
+                throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
+
             var query = @$"SELECT * FROM {TableName} WHERE Id = @Id";
 
             var parameters = new DynamicParameters();
@@ -118,6 +130,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns severity id by given name. If severity with given name doesn't exists return -1.</returns>
         public async Task<int> GetSeverityIdByName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name), "Severity name cannot be null or empty.");
+
             var query = @$"SELECT Id FROM {TableName}
                            WHERE SeverityName = @SeverityName";
 
@@ -139,6 +154,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns>Returns severity name by given id.</returns>
         public async Task<string> GetSeverityNameById(int id)
         {
+            if (id <= 0)
+                throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
+
             var query = @$"SELECT SeverityName FROM {TableName}
                            WHERE Id = @Id";
 
@@ -158,6 +176,9 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
         /// <returns></returns>
         public async Task UpdateSeverityAsync(Severity updationSeverity)
         {
+            if (updationSeverity is null)
+                throw new ArgumentNullException(nameof(updationSeverity), "Updation severity model cannot be null.");
+
             var query = @$"UPDATE {TableName} 
                            SET Id = @Id, SeverityName = @SeverityName, SeveriryDescription = @SeveriryDescription
                            WHERE Id = @Id";
