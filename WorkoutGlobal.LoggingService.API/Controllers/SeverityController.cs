@@ -146,6 +146,14 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateSeverity([FromBody] CreationSeverityDto creationSeverityDto)
         {
+            if (creationSeverityDto is null)
+                return BadRequest(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Incoming creation DTO model is null.",
+                    Details = "Incoming creation DTO model cannot be null."
+                });
+
             var validationResult = await CreationValidator.ValidateAsync(creationSeverityDto);
 
             if (!validationResult.IsValid)
@@ -294,6 +302,46 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
             var logsDto = Mapper.Map<IEnumerable<LogDto>>(logs);
 
             return Ok(logsDto);
+        }
+
+        /// <summary>
+        /// Purge database for integration tests.
+        /// </summary>
+        /// <param name="id">Severity id.</param>
+        /// <returns></returns>
+        /// <response code="204">Severity was successfully deleted.</response>
+        /// <response code="400">Params of request is uncorrect.</response>
+        /// <response code="404">Model don't exists.</response>
+        /// <response code="500">Something wrong happen on server.</response>
+        [HttpDelete("purge/{id}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(type: typeof(NoContentResult), statusCode: StatusCodes.Status204NoContent)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status404NotFound)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Purge(int id)
+        {
+            if (id <= 0)
+                return BadRequest(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Id isn't valid.",
+                    Details = "Searchable severity cannot be found because id isn't valid."
+                });
+
+            var deletingSeverity = await SeverityRepository.GetSeverityAsync(id);
+
+            if (deletingSeverity is null)
+                return NotFound(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Severity not found.",
+                    Details = "Cannot find severity with given id."
+                });
+
+            await SeverityRepository.DeleteSeverityAsync(id);
+
+            return NoContent();
         }
     }
 }

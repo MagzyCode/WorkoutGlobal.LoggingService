@@ -34,7 +34,7 @@ namespace WorkoutGlobal.LoggingService.UnitTests.Validators
             // arrange
             var creationSeverityDto = Fixture.Build<CreationSeverityDto>()
                 .With(x => x.SeverityName, string.Empty)
-                .With(x => x.SeveriryDescription, string.Empty)
+                .With(x => x.SeverityDescription, string.Empty)
                 .Create();
 
             // act

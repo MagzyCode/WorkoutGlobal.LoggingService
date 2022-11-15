@@ -29,13 +29,13 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (creationSeverity is null)
                 throw new ArgumentNullException(nameof(creationSeverity), "Creation severity model cannot be null.");
 
-            var query = @$"INSERT INTO {TableName} (SeverityName, SeveriryDescription) 
-                           VALUES (@SeverityName, @SeveriryDescription)
-                           RETURNING Id";
+            var query = @$"INSERT INTO {TableName} (""SeverityName"", ""SeverityDescription"") 
+                           VALUES (@SeverityName, @SeverityDescription)
+                           RETURNING ""Id""";
 
             var parameters = new DynamicParameters();
             parameters.Add("SeverityName", creationSeverity.SeverityName, DbType.String);
-            parameters.Add("SeveriryDescription", creationSeverity.SeveriryDescription, DbType.String);
+            parameters.Add("SeverityDescription", creationSeverity.SeverityDescription, DbType.String);
 
             using var connection = OpenConnection();
 
@@ -54,7 +54,7 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (id <= 0)
                 throw new ArgumentException("Deletion severity id cannot be less then 0.", nameof(id));
 
-            var query = @$"DELETE FROM {TableName} WHERE Id = @Id";
+            var query = @$"DELETE FROM {TableName} WHERE ""Id"" = @Id";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
@@ -91,10 +91,10 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (id <= 0)
                 throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
 
-            var query = "SELECT * FROM Logs WHERE SeverityId = @SeverityId";
+            var query = @"SELECT * FROM ""Logs"" WHERE ""SeverityId"" = @SeverityId";
 
             var parameters = new DynamicParameters();
-            parameters.Add("Id", id, DbType.Int32);
+            parameters.Add("SeverityId", id, DbType.Int32);
 
             using var connection = OpenConnection();
             var logs = await connection.QueryAsync<Log>(query, parameters);
@@ -112,13 +112,13 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (id <= 0)
                 throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
 
-            var query = @$"SELECT * FROM {TableName} WHERE Id = @Id";
+            var query = @$"SELECT * FROM {TableName} WHERE ""Id"" = @Id";
 
             var parameters = new DynamicParameters();
-            parameters.Add("Id", id, DbType.Guid);
+            parameters.Add("Id", id, DbType.Int32);
 
             using var connection = OpenConnection();
-            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query, parameters);
 
             return severity;
         }
@@ -133,14 +133,14 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name), "Severity name cannot be null or empty.");
 
-            var query = @$"SELECT Id FROM {TableName}
-                           WHERE SeverityName = @SeverityName";
+            var query = @$"SELECT ""Id"" FROM {TableName}
+                           WHERE ""SeverityName"" = @SeverityName";
 
             var parameters = new DynamicParameters();
             parameters.Add("SeverityName", name, DbType.String);
 
             using var connection = OpenConnection();
-            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query, parameters);
 
             return severity is null 
                 ? -1
@@ -157,14 +157,14 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
             if (id <= 0)
                 throw new ArgumentException("Severity id cannot be less then 0.", nameof(id));
 
-            var query = @$"SELECT SeverityName FROM {TableName}
-                           WHERE Id = @Id";
+            var query = @$"SELECT ""SeverityName"" FROM {TableName}
+                           WHERE ""Id"" = @Id";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
 
             using var connection = OpenConnection();
-            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query);
+            var severity = await connection.QuerySingleOrDefaultAsync<Severity>(query, parameters);
 
             return severity?.SeverityName;
         }
@@ -180,13 +180,13 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
                 throw new ArgumentNullException(nameof(updationSeverity), "Updation severity model cannot be null.");
 
             var query = @$"UPDATE {TableName} 
-                           SET Id = @Id, SeverityName = @SeverityName, SeveriryDescription = @SeveriryDescription
-                           WHERE Id = @Id";
+                           SET ""SeverityName"" = @SeverityName, ""SeverityDescription"" = @SeverityDescription
+                           WHERE ""Id"" = @Id";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", updationSeverity.Id, DbType.Int32);
             parameters.Add("SeverityName", updationSeverity.SeverityName, DbType.String);
-            parameters.Add("SeveriryDescription", updationSeverity.SeveriryDescription, DbType.String);
+            parameters.Add("SeverityDescription", updationSeverity.SeverityDescription, DbType.String);
 
             using var connection = OpenConnection();
 

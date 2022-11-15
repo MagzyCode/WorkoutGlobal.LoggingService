@@ -53,26 +53,6 @@ namespace WorkoutGlobal.LoggingService.Api.Repositories
                 : value;
         }
 
-        ///// <summary>
-        ///// Delete model by id.
-        ///// </summary>
-        ///// <param name="id">Model id.</param>
-        ///// <returns></returns>
-        //public async Task DeleteAsync(TId id)
-        //{
-        //    if (EqualityComparer<TId>.Default.Equals(id, default))
-        //        throw new ArgumentNullException(nameof(id), "Searchable id cannot have default value.");
-
-        //    var query = $"DELETE FROM {TableName} WHERE Id = {id}";
-
-        //    using var connection = OpenConnection();
-
-        //    var deletedRows = await connection.ExecuteAsync(query);
-
-        //    if (deletedRows == 0)
-        //        throw new InvalidOperationException("Delete operation don't executed.");
-        //}
-
         /// <summary>
         /// Opens connection to Postgre database.
         /// </summary>

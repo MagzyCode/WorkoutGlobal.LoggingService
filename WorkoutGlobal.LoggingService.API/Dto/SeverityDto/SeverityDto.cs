@@ -18,6 +18,6 @@
         /// <summary>
         /// Severity level description.
         /// </summary>
-        public string SeveriryDescription { get; set; }
+        public string SeverityDescription { get; set; }
     }
 }

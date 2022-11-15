@@ -20,7 +20,7 @@ namespace WorkoutGlobal.LoggingService.API.Models
         /// <summary>
         /// Severity level description.
         /// </summary>
-        public string SeveriryDescription { get; set; }
+        public string SeverityDescription { get; set; }
 
         /// <summary>
         /// Represents collection of logs with certain severity level.

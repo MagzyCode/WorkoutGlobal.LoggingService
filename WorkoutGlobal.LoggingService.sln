@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.LoggingService.Api", "WorkoutGlobal.LoggingService.API\WorkoutGlobal.LoggingService.Api.csproj", "{25DEA0A8-BF50-414F-93DF-12E8D81CE934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutGlobal.LoggingService.UnitTests", "WorkoutGlobal.LoggingService.UnitTests\WorkoutGlobal.LoggingService.UnitTests.csproj", "{A752811B-4E9B-496A-B3CC-13C652689DCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.LoggingService.UnitTests", "WorkoutGlobal.LoggingService.UnitTests\WorkoutGlobal.LoggingService.UnitTests.csproj", "{A752811B-4E9B-496A-B3CC-13C652689DCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutGlobal.LoggingService.IntegrationTests", "WorkoutGlobal.LoggingService.IntegrationTests\WorkoutGlobal.LoggingService.IntegrationTests.csproj", "{74A62B04-C361-4A12-9169-662F6AA1DE75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A752811B-4E9B-496A-B3CC-13C652689DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A752811B-4E9B-496A-B3CC-13C652689DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A752811B-4E9B-496A-B3CC-13C652689DCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

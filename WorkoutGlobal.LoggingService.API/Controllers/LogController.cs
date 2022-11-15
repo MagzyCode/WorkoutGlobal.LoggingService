@@ -160,7 +160,15 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
         [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateLog([FromBody] CreationLogDto creationLogDto)
         {
-            var validationResult = await CreationValidator.ValidateAsync(creationLogDto);
+            if (creationLogDto is null)
+                return BadRequest(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Incoming creation DTO model is null.",
+                    Details = "Incoming creation DTO model cannot be null."
+                });
+
+            var validationResult = await CreationValidator.ValidateAsync(creationLogDto);            
 
             if (!validationResult.IsValid)
                 return BadRequest(new ErrorDetails()
@@ -269,10 +277,51 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
 
             var updationSeverityId = await SeverityRepository.GetSeverityIdByName(updationLogDto.Severity);
 
-            if (updationSeverityId != log.SeverityId)
-                updationLog.SeverityId = updationSeverityId;
+            updationLog.SeverityId = updationSeverityId != log.SeverityId
+                ? updationSeverityId
+                : log.SeverityId;
 
             await LogRepository.UpdateLogAsync(updationLog);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Purge database for integration tests.
+        /// </summary>
+        /// <param name="id">Log id.</param>
+        /// <returns></returns>
+        /// <response code="204">Log was successfully deleted.</response>
+        /// <response code="400">Params of request is uncorrect.</response>
+        /// <response code="404">Model don't exists.</response>
+        /// <response code="500">Something wrong happen on server.</response>
+        [HttpDelete("purge/{id}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(type: typeof(NoContentResult), statusCode: StatusCodes.Status204NoContent)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status404NotFound)]
+        [ProducesResponseType(type: typeof(ErrorDetails), statusCode: StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Purge(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Id is empty.",
+                    Details = "Searchable log cannot be found because id is empty."
+                });
+
+            var deletingLog = await LogRepository.GetLogAsync(id);
+
+            if (deletingLog is null)
+                return NotFound(new ErrorDetails()
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = "Log not found.",
+                    Details = "Cannot find log with given id."
+                });
+
+            await LogRepository.DeleteLogAsync(id);
 
             return NoContent();
         }

@@ -18,7 +18,7 @@ namespace WorkoutGlobal.LoggingService.Api.Validators
             RuleFor(severity => severity.SeverityName)
                 .NotEmpty();
 
-            RuleFor(severity => severity.SeveriryDescription)
+            RuleFor(severity => severity.SeverityDescription)
                 .NotEmpty();
         }
     }
