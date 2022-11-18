@@ -271,9 +271,10 @@ namespace WorkoutGlobal.LoggingService.Api.Controllers
                     Message = "Log not found.",
                     Details = "Cannot find log with given id."
                 });
-
+            // Id LogTime SeverityId
             var updationLog = Mapper.Map<Log>(updationLogDto);
             updationLog.Id = id;
+            updationLog.LogTime = log.LogTime;
 
             var updationSeverityId = await SeverityRepository.GetSeverityIdByName(updationLogDto.Severity);
 

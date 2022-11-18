@@ -23,10 +23,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
             {
                 Connection.PurgeList.Clear();
 
-                CreationModel = Fixture.Build<CreationSeverityDto>()
-                    .With(x => x.SeverityName, "Test name")
-                    .With(x => x.SeverityDescription, "Test description")
-                    .Create();
+                CreationModel = Fixture.Create<CreationSeverityDto>();
             });
         }
 
@@ -60,8 +57,8 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
             createdModel.Should().NotBeNull();
             createdModel.Should().BeOfType<SeverityDto>();
-            createdModel.SeverityName.Should().Be("Test name");
-            createdModel.SeverityDescription.Should().Be("Test description");
+            createdModel.SeverityName.Should().Be(CreationModel.SeverityName);
+            createdModel.SeverityDescription.Should().Be(CreationModel.SeverityDescription);
         }
 
         [Fact]
@@ -160,8 +157,8 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
             createdModel.Should().NotBeNull();
             createdModel.Should().BeOfType<SeverityDto>();
-            createdModel.SeverityName.Should().Be("Test name");
-            createdModel.SeverityDescription.Should().Be("Test description");
+            createdModel.SeverityName.Should().Be(CreationModel.SeverityName);
+            createdModel.SeverityDescription.Should().Be(CreationModel.SeverityDescription);
         }
 
         [Fact]
@@ -236,7 +233,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
             var creationLog = Fixture.Build<CreationLogDto>()
                 .With(x => x.Message, "Test log")
-                .With(x => x.Severity, "Test name")
+                .With(x => x.Severity, CreationModel.SeverityName)
                 .Create();
             var postLogResponse = await Connection.AppClient.PostAsJsonAsync("api/logs", creationLog);
             var createdLogId = await postLogResponse.Content.ReadFromJsonAsync<Guid>();

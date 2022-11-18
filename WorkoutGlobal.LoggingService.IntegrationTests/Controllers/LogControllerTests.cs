@@ -17,16 +17,18 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
         public CreationLogDto CreationModel { get; set; }
 
+        public CreationSeverityDto Severity { get; set; }
+
         public async Task InitializeAsync()
         {
             await Task.Run(() =>
             {
                 Connection.PurgeList.Clear();
 
-                CreationModel = Fixture.Build<CreationLogDto>()
-                    .With(x => x.Message, "Test message")
-                    .With(x => x.Severity, "Test name")
-                    .Create();
+                Severity = Fixture.Create<CreationSeverityDto>();
+
+                CreationModel = Fixture.Create<CreationLogDto>();
+                CreationModel.Severity = Severity.SeverityName;
             });   
         }
 
@@ -41,12 +43,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
         {
             // arrange
             var url = "api/logs";
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities",
-                new CreationSeverityDto()
-                {
-                    SeverityName = "Test name",
-                    SeverityDescription = "Test description"
-                });
+            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", Severity);
             var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
 
             var postResponse = await Connection.AppClient.PostAsJsonAsync("api/logs", CreationModel);
@@ -66,8 +63,8 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
             createdModel.Should().NotBeNull();
             createdModel.Should().BeOfType<LogDto>();
-            createdModel.Message.Should().Be("Test message");
-            createdModel.SeverityName.Should().Be("Test name");
+            createdModel.Message.Should().Be(CreationModel.Message);
+            createdModel.SeverityName.Should().Be(CreationModel.Severity);
         }
 
         [Fact]
@@ -75,12 +72,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
         {
             // arrange
             var url = "api/logs";
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities",
-                new CreationSeverityDto()
-                {
-                    SeverityName = "Test name",
-                    SeverityDescription = "Test description"
-                });
+            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", Severity);
             var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
 
             var postResponse = await Connection.AppClient.PostAsJsonAsync("api/logs", CreationModel);
@@ -133,19 +125,9 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
                 .With(x => x.Severity, string.Empty)
                 .Create();
 
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", 
-                new CreationSeverityDto() 
-                { 
-                    SeverityName = "Test name", 
-                    SeverityDescription = "Test description"
-                });
-            var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
-
             // act
             var postResponse = await Connection.AppClient.PostAsJsonAsync("api/logs", CreationModel);
             var error = await postResponse.Content.ReadFromJsonAsync<ErrorDetails>();
-
-            await Connection.AppClient.DeleteAsync($"api/severities/purge/{createdSeverityId}");
 
             // assert
             postResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -162,12 +144,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
         {
             // arrange
             var url = "api/logs";
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities",
-                new CreationSeverityDto()
-                {
-                    SeverityName = "Test name",
-                    SeverityDescription = "Test description"
-                });
+            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", Severity);
             var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
 
             // act
@@ -189,8 +166,8 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
 
             createdModel.Should().NotBeNull();
             createdModel.Should().BeOfType<LogDto>();
-            createdModel.Message.Should().Be("Test message");
-            createdModel.SeverityName.Should().Be("Test name");
+            createdModel.Message.Should().Be(CreationModel.Message);
+            createdModel.SeverityName.Should().Be(CreationModel.Severity);
         }
 
         [Fact]
@@ -198,12 +175,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
         {
             // arrange
             var url = "api/logs";
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities",
-                new CreationSeverityDto()
-                {
-                    SeverityName = "Test name",
-                    SeverityDescription = "Test description"
-                });
+            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", Severity);
             var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
 
             var postResponse = await Connection.AppClient.PostAsJsonAsync(url, CreationModel);
@@ -235,12 +207,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
         {
             // arrange
             var url = "api/logs";
-            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities",
-                new CreationSeverityDto()
-                {
-                    SeverityName = "Test name",
-                    SeverityDescription = "Test description"
-                });
+            var postSeverityResponse = await Connection.AppClient.PostAsJsonAsync("api/severities", Severity);
             var createdSeverityId = await postSeverityResponse.Content.ReadFromJsonAsync<int>();
 
             var postResponse = await Connection.AppClient.PostAsJsonAsync(url, CreationModel);
@@ -249,7 +216,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
             // act
             CreationModel = Fixture.Build<CreationLogDto>()
                 .With(x => x.Message, "Update message")
-                .With(x => x.Severity, "Test name")
+                .With(x => x.Severity, CreationModel.Severity)
                 .Create();
 
             var updateResponse = await Connection.AppClient.PutAsJsonAsync($"{url}/{createdId}", CreationModel);
@@ -268,7 +235,7 @@ namespace WorkoutGlobal.LoggingService.IntegrationTests.Controllers
             createdModel.Should().NotBeNull();
             createdModel.Should().BeOfType<LogDto>();
             createdModel.Message.Should().Be("Update message");
-            createdModel.SeverityName.Should().Be("Test name");
+            createdModel.SeverityName.Should().Be(CreationModel.Severity);
         }
     } 
 }
