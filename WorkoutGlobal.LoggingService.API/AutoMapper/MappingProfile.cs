@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WorkoutGlobal.LoggingService.Api.Dto;
 using WorkoutGlobal.LoggingService.API.Models;
+using WorkoutGlobal.Shared.Messages;
 
 namespace WorkoutGlobal.LoggingService.Api.AutoMapper
 {
@@ -19,6 +20,7 @@ namespace WorkoutGlobal.LoggingService.Api.AutoMapper
             CreateMap<Log, LogDto>();
             CreateMap<CreationLogDto, Log>();
             CreateMap<UpdationLogDto, Log>();
+            CreateMap<CreateLogMessage, Log>();
 
             #endregion
 

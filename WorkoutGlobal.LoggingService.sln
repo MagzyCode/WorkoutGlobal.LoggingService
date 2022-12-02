@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.LoggingServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.LoggingService.UnitTests", "WorkoutGlobal.LoggingService.UnitTests\WorkoutGlobal.LoggingService.UnitTests.csproj", "{A752811B-4E9B-496A-B3CC-13C652689DCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkoutGlobal.LoggingService.IntegrationTests", "WorkoutGlobal.LoggingService.IntegrationTests\WorkoutGlobal.LoggingService.IntegrationTests.csproj", "{74A62B04-C361-4A12-9169-662F6AA1DE75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.LoggingService.IntegrationTests", "WorkoutGlobal.LoggingService.IntegrationTests\WorkoutGlobal.LoggingService.IntegrationTests.csproj", "{74A62B04-C361-4A12-9169-662F6AA1DE75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutGlobal.Shared.Messages", "..\..\Shared messages\WorkoutGlobal.Shared\WorkoutGlobal.Shared.Messages\WorkoutGlobal.Shared.Messages.csproj", "{48DBC676-C0E8-4712-87AE-DACD3DFABA62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74A62B04-C361-4A12-9169-662F6AA1DE75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48DBC676-C0E8-4712-87AE-DACD3DFABA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48DBC676-C0E8-4712-87AE-DACD3DFABA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48DBC676-C0E8-4712-87AE-DACD3DFABA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48DBC676-C0E8-4712-87AE-DACD3DFABA62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
