@@ -1,10 +1,11 @@
 using FluentValidation.AspNetCore;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using WorkoutGlobal.LoggingService.Api.Consumers;
+using WorkoutGlobal.LoggingService.Api.Enums;
 using WorkoutGlobal.LoggingService.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var broker = Enum.Parse<Broker>(builder.Configuration["MassTransitSettings:Bus"]);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -22,21 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureRepositories();
 
-builder.Services.AddMassTransit(options =>
-{
-    options.AddConsumer<CreateLogConsumer>();
-
-    options.UsingRabbitMq((cxt, cfg) =>
-    {
-        cfg.Host(builder.Configuration["RabbitMqHost"]);
-
-        cfg.ReceiveEndpoint(builder.Configuration["Exchanges:CreateLog"], endpoint =>
-        {
-            endpoint.ConfigureConsumer<CreateLogConsumer>(cxt);
-        });
-    });
-});
-builder.Services.AddMassTransitHostedService();
+builder.Services.ConfigureMassTransit(builder.Configuration, broker);
 
 var app = builder.Build();
 

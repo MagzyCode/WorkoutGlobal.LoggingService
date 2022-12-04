@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
+using MassTransit;
+using WorkoutGlobal.LoggingService.Api.Consumers;
 using WorkoutGlobal.LoggingService.Api.Contracts;
 using WorkoutGlobal.LoggingService.Api.Dto;
+using WorkoutGlobal.LoggingService.Api.Enums;
 using WorkoutGlobal.LoggingService.Api.Repositories;
 using WorkoutGlobal.LoggingService.Api.Validators;
 using WorkoutGlobal.LoggingService.API.Models;
@@ -34,5 +37,42 @@ namespace WorkoutGlobal.LoggingService.API.Extensions
             services.AddSingleton<IValidator<UpdationSeverityDto>, UpdationSeverityDtoValidator>();
         }
 
+        /// <summary>
+        /// Configure MassTransit.
+        /// </summary>
+        /// <param name="services">Project services.</param>
+        /// <param name="configuration">Project configuration.</param>
+        /// <param name="broker">Message broker type.</param>
+        public static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration, Broker broker)
+        {
+            services.AddMassTransit(options =>
+            {
+                options.AddConsumer<CreateLogConsumer>();
+
+                switch (broker)
+                {
+                    case Broker.RabbitMQ:
+                        options.UsingRabbitMq((context, configurator) =>
+                        {
+                            configurator.Host(configuration["MassTransitSettings:Hosts:RabbitMQHost"]);
+                            configurator.ReceiveEndpoint(configuration["MassTransitSettings:Exchanges:CreateLog"], endpoint =>
+                            {
+                                endpoint.ConfigureConsumer<CreateLogConsumer>(context);
+                            });
+                        });
+                        break;
+                    case Broker.AzureServiceBus:
+                        options.UsingAzureServiceBus((context, configurator) =>
+                        {
+                            configurator.Host(configuration["MassTransitSettings:Hosts:AzureSBHost"]);
+                            configurator.ReceiveEndpoint(configuration["MassTransitSettings:Exchanges:CreateLog"], endpoint =>
+                            {
+                                endpoint.ConfigureConsumer<CreateLogConsumer>(context);
+                            });
+                        });
+                        break;
+                }
+            });
+        }
     }
 }
